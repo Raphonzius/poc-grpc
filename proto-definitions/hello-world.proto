@@ -1,7 +1,9 @@
 syntax = "proto3";
 
+package stubs.example;
+
 option java_multiple_files = true;
-option java_outer_classname = "HelloWorldProto";
+option java_package = "io.github.raphonzius.java.stubs.example";
 
 service HelloService {
   rpc SayHello(HelloRequest) returns (HelloResponse);
