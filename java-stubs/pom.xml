@@ -65,6 +65,7 @@
                             <groupId>io.grpc</groupId>
                             <artifactId>protoc-gen-grpc-java</artifactId>
                             <version>${protoc.version}</version>
+                            <!--suppress UnresolvedMavenProperty-->
                             <classifier>${os.detected.classifier}</classifier>
                         </binaryMavenPlugin>
                     </binaryMavenPlugins>
