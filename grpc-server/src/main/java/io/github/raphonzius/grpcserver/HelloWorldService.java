@@ -2,12 +2,12 @@ package io.github.raphonzius.grpcserver;
 
 import io.github.raphonzius.java.stubs.example.HelloRequest;
 import io.github.raphonzius.java.stubs.example.HelloResponse;
-import io.github.raphonzius.java.stubs.example.HelloServiceGrpc.HelloServiceImplBase;
+import io.github.raphonzius.java.stubs.example.HelloServiceGrpc;
 import io.grpc.stub.StreamObserver;
 import org.springframework.stereotype.Service;
 
 @Service
-public class HelloWorldService extends HelloServiceImplBase {
+public class HelloWorldService extends HelloServiceGrpc.HelloServiceImplBase {
 
     @Override
     public void sayHello(HelloRequest request, StreamObserver<HelloResponse> responseObserver) {

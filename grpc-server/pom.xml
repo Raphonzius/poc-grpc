@@ -32,7 +32,7 @@
 
         <dependency>
             <groupId>io.github.raphonzius</groupId>
-            <artifactId>java-stubs</artifactId>
+            <artifactId>proto-stubgen</artifactId>
             <version>1.0-SNAPSHOT</version>
         </dependency>
 

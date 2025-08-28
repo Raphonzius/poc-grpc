@@ -10,7 +10,7 @@
     <packaging>pom</packaging>
 
     <modules>
-        <module>java-stubs</module>
+        <module>proto-stubgen</module>
         <module>grpc-server</module>
     </modules>
 

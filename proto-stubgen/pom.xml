@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>io.github.raphonzius</groupId>
+    <artifactId>proto-stubgen</artifactId>
+    <version>1.0</version>
+    <description>Maven Project focused on the conversion of proto files into stubs</description>
+
+    <properties>
+        <protoc.version>1.74.0</protoc.version>
+        <protobuf.version>4.31.1</protobuf.version>
+        <protobuf-maven.version>3.8.1</protobuf-maven.version>
+
+        <ecj.version>2.15.0</ecj.version>
+        <maven.compiler.version>3.14.0</maven.compiler.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.protobuf</groupId>
+            <artifactId>protobuf-java</artifactId>
+            <version>${protobuf.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-stub</artifactId>
+            <version>${protoc.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.grpc</groupId>
+            <artifactId>grpc-protobuf</artifactId>
+            <version>${protoc.version}</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- OS auto-detection plugin -->
+            <plugin>
+                <groupId>kr.motd.maven</groupId>
+                <artifactId>os-maven-plugin</artifactId>
+                <version>1.7.1</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>detect</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>io.github.ascopes</groupId>
+                <artifactId>protobuf-maven-plugin</artifactId>
+                <version>${protobuf-maven.version}</version>
+
+                <configuration>
+                    <protocVersion>${protobuf.version}</protocVersion>
+                    <sourceDirectories>
+                        <sourceDirectory>${project.basedir}/../proto-definitions</sourceDirectory>
+                    </sourceDirectories>
+                </configuration>
+
+                <executions>
+                    <!-- Java sources -->
+                    <execution>
+                        <id>java</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <binaryMavenPlugins>
+                                <binaryMavenPlugin>
+                                    <groupId>io.grpc</groupId>
+                                    <artifactId>protoc-gen-grpc-java</artifactId>
+                                    <version>${protoc.version}</version>
+                                    <!--suppress UnresolvedMavenProperty-->
+                                    <classifier>${os.detected.classifier}</classifier>
+                                </binaryMavenPlugin>
+                            </binaryMavenPlugins>
+                            <outputDirectory>${project.basedir}/target/generated-sources/java</outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- Python sources -->
+                    <execution>
+                        <id>python</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <javaEnabled>false</javaEnabled>
+                            <pythonEnabled>true</pythonEnabled>
+                            <pythonStubsEnabled>true</pythonStubsEnabled>
+                            <outputDirectory>${project.basedir}/target/generated-sources/python</outputDirectory>
+                        </configuration>
+                    </execution>
+
+                    <!-- Rust sources -->
+                    <execution>
+                        <id>rust</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                        <configuration>
+                            <javaEnabled>false</javaEnabled>
+                            <rustEnabled>true</rustEnabled>
+                            <arguments>
+                                <argument>--rust_opt=experimental-codegen=enabled</argument>
+                                <argument>--rust_opt=kernel=upb</argument>
+                            </arguments>
+                            <outputDirectory>${project.basedir}/target/generated-sources/rust</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+                <configuration>
+                    <release>21</release>
+                </configuration>
+            </plugin>
+
+            <!-- ECJ appears to reduce compilation times by around 25% for very large projects in comparison to javac -->
+            <!--<plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven.compiler.version}</version>
+
+                <configuration>
+                    <compilerId>eclipse</compilerId>
+                    &lt;!&ndash; ECJ raises warnings we do not care about in the generated code. &ndash;&gt;
+                    <failOnWarning>false</failOnWarning>
+                    <showWarnings>false</showWarnings>
+                </configuration>
+
+                <dependencies>
+                    <dependency>
+                        <groupId>org.codehaus.plexus</groupId>
+                        <artifactId>plexus-compiler-eclipse</artifactId>
+                        <version>${ecj.version}</version>
+                    </dependency>
+                </dependencies>
+            </plugin>-->
+        </plugins>
+    </build>
+
+</project>
