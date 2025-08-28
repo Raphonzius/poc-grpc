@@ -60,6 +60,7 @@
 
                 <configuration>
                     <protocVersion>${protobuf.version}</protocVersion>
+                    <cleanOutputDirectories>true</cleanOutputDirectories>
                     <sourceDirectories>
                         <sourceDirectory>${project.basedir}/../proto-definitions</sourceDirectory>
                     </sourceDirectories>
